@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+
+model Booking{
+    id Int @id @default(autoincrement())
+    firstName String
+    lastName String
+    email String
+    phone String
+    street String
+    city String
+    postalCode String
+    fault String
+    engineerReport String
+    item String
+    brand String
+    itemModel String
+    hardwareInstallation Int
+    softwareInstallation Int
+    isDone Boolean @default(false)
+    createdAt DateTime @default(now()) 
+}
