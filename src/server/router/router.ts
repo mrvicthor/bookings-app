@@ -1,7 +1,7 @@
 // @ts-nocheck
-
 import { createRouter } from "./context";
 import { createBookingSchema } from "@/schema/booking.schema";
+import { z } from "zod";
 
 export const serverRouter = createRouter()
   .query("getAll", {
@@ -46,6 +46,24 @@ export const serverRouter = createRouter()
           brand,
         },
       });
+    },
+  })
+  .query("byId", {
+    input: z.object({
+      id: z.number(),
+    }),
+    async resolve({ input }) {
+      const { id } = input;
+      const booking = await prisma?.booking.findUnique({
+        where: { id },
+      });
+      if (!booking) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `No booking with id '${id}'`,
+        });
+      }
+      return booking;
     },
   });
 
