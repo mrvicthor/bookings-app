@@ -1,10 +1,30 @@
 import NextError from "next/error";
 import { trpc } from "@/utils/trpc";
 import { useRouter } from "next/router";
+import { capitalizeFirstLetter } from "@/hooks/capitalize";
+import { MdOutlineKeyboardBackspace } from "react-icons/md";
+import { useCallback, useEffect, useState } from "react";
+import { Booking } from "@/models/booking";
 
 const DetailsPage = () => {
+  const router = useRouter();
   const id = parseInt(useRouter().query.id as string, 10);
   const bookingQuery = trpc.useQuery(["bookings.byId", { id }]);
+  const [completed, setCompleted] = useState<boolean>(false);
+
+  const updateOneMutation = trpc.useMutation(["bookings.updateBooking"], {
+    onSuccess: () => console.log("Update successful"),
+  });
+
+  const updateOne = useCallback(
+    (item: Booking) => {
+      updateOneMutation.mutate({
+        ...item,
+        isDone: !item.isDone,
+      });
+    },
+    [updateOneMutation]
+  );
 
   if (bookingQuery.error) {
     return (
@@ -19,34 +39,102 @@ const DetailsPage = () => {
     return <>Loading...</>;
   }
   const { data } = bookingQuery;
-  console.log(data);
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    street,
+    postalCode,
+    city,
+    item,
+    itemModel,
+    brand,
+    fault,
+    isDone,
+    hardwareInstallation,
+    softwareInstallation,
+  } = data;
+
   return (
-    <div>
-      <h1>Details Page</h1>
+    <div className="px-4 py-4">
+      <div className="border mt-5 rounded-md mx-auto w-[50%] space-y-4 px-8 py-4">
+        <button
+          onClick={() => router.push("/bookings")}
+          className="text-white bg-[#3C3C44] flex items-center gap-2 px-3 py-1 rounded hover:opacity-70"
+        >
+          <MdOutlineKeyboardBackspace /> Back
+        </button>
+        <h1 className="text-center font-semibold text-2xl">
+          {capitalizeFirstLetter(firstName)} {capitalizeFirstLetter(lastName)}
+        </h1>
+
+        <div className="grid grid-cols-1 divide-y">
+          <div className="grid grid-cols-2 divide-x">
+            <div className=" py-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs">Email:</h3>
+              <p className="font-semibold text-2xl">{email}</p>
+            </div>
+            <div className=" py-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs">Phone Number:</h3>
+              <p className="font-semibold text-2xl">{phone}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 divide-x">
+            <div className="py-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs">Street:</h3>
+              <p className="font-semibold text-2xl">{street}</p>
+            </div>
+            <div className="py-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs">City:</h3>
+              <p className="font-semibold text-2xl">{city}</p>
+            </div>
+            <div className="py-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs">Post Code:</h3>
+              <p className="font-semibold text-2xl">{postalCode}</p>
+            </div>
+          </div>
+          <div className=" grid grid-cols-4 divide-x">
+            <div className="py-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs">Product</h3>
+              <p className="font-semibold text-2xl">{item}</p>
+            </div>
+            <div className="py-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs">Model</h3>
+              <p className="font-semibold text-2xl">{itemModel}</p>
+            </div>
+            <div className="py-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs">Brand</h3>
+              <p className="font-semibold text-2xl">{brand}</p>
+            </div>
+            <div className="py-2 px-2 flex flex-col items-center">
+              <h3 className="opacity-70 text-xs ">Fault</h3>
+              <p className="font-semibold text-2xl">{fault}</p>
+            </div>
+          </div>
+          <div className="py-2 flex flex-col items-center">
+            <h3 className="opacity-70 text-xs">Total Cost</h3>
+            <p className="font-semibold text-3xl">
+              £ {hardwareInstallation + softwareInstallation}
+            </p>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                setCompleted(!completed);
+                updateOne(data);
+              }}
+              className={`${
+                completed ? "bg-[#048444]" : "bg-[#F3D122]"
+              } px-4 py-2 rounded w-full text-white`}
+            >
+              {completed ? "Fixed" : "Not Fixed"}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-// export async function getStaticPaths() {
-//   const bookings = trpc.useQuery(["bookings.getAll"]).data;
-
-//   return {
-//     paths: bookings?.map((booking) => {
-//       return { params: { id: booking.id } };
-//     }),
-//     fallback: false,
-//   };
-// }
-
-// export function getStaticProps({ params }: { params: { id: number } }) {
-//   const { data: bookings } = trpc.useQuery(["bookings.getAll"]);
-
-//   const booking = bookings?.filter((booking) => booking.id === params.id);
-
-//   return {
-//     props: {
-//       booking,
-//     },
-//   };
-// }
 export default DetailsPage;

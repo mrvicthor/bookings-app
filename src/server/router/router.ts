@@ -65,6 +65,34 @@ export const serverRouter = createRouter()
       }
       return booking;
     },
+  })
+  .mutation("updateBooking", {
+    input: z.object({
+      id: z.number(),
+      firstName: z.string(),
+      lastName: z.string(),
+      email: z.string(),
+      phone: z.string(),
+      street: z.string(),
+      city: z.string(),
+      postalCode: z.string(),
+      fault: z.string(),
+      engineerReport: z.string(),
+      item: z.string(),
+      brand: z.string(),
+      itemModel: z.string(),
+      hardwareInstallation: z.number(),
+      softwareInstallation: z.number(),
+      isDone: z.boolean(),
+    }),
+    resolve: async ({ input, ctx }) => {
+      const { id, ...rest } = input;
+
+      return await ctx.prisma.booking.update({
+        where: { id },
+        data: { ...rest },
+      });
+    },
   });
 
 export type ServerRouter = typeof serverRouter;
