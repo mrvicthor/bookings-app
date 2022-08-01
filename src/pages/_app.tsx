@@ -2,13 +2,31 @@
 import { withTRPC } from "@trpc/next";
 import type { AppRouter } from "../server/router";
 import type { AppType } from "next/dist/shared/lib/utils";
+import { NextPage } from "next";
+import { AppProps } from "next/app";
+import { Layout } from "@/components/index";
+import { ReactElement, ReactNode } from "react";
 import superjson from "superjson";
+import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 
-const MyApp: AppType = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
+export type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
 };
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
+  return getLayout(
+    <SessionProvider session={pageProps.session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
+}) as AppType;
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") {

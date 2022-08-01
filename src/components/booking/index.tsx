@@ -16,7 +16,7 @@ const Booking = () => {
   //   <AlertMessage toggleMessage={toggleMessage} />;
   // }, 1500);
   return (
-    <div className="py-8 w-full">
+    <div className="pb-4 w-full lg:max-w-[1140px] lg:mx-auto">
       <div className="shadow overflow-hidden rounded border-b border-gray-200">
         <table className="min-w-full bg-white">
           <thead className="bg-gray-800 text-white">

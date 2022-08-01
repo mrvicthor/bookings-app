@@ -3,7 +3,7 @@ import { trpc } from "@/utils/trpc";
 import { useRouter } from "next/router";
 import { capitalizeFirstLetter } from "@/hooks/capitalize";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Booking } from "@/models/booking";
 
 const DetailsPage = () => {
