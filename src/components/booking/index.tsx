@@ -1,17 +1,37 @@
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AlertMessage } from "@/components/index";
 import { BiDetail } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { useRouter } from "next/router";
 import { capitalizeFirstLetter } from "@/hooks/capitalize";
+import { Booking } from "@/models/booking";
 
 const Booking = () => {
   const router = useRouter();
-  const { data: bookings } = trpc.useQuery(["bookings.getAll"]);
+  const { data } = trpc.useQuery(["bookings.getAll"]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const toggleMessage = () => setShowMessage(false);
+  const deleteOneMutation = trpc.useMutation(["bookings.deleteOne"], {
+    onSuccess: () => console.log("Delete successful"),
+  });
 
+  const deleteBooking = useCallback(
+    (item: Booking) => {
+      if (bookings?.length) {
+        deleteOneMutation.mutate({
+          id: item.id,
+        });
+      }
+    },
+    [bookings, deleteOneMutation]
+  );
+
+  useEffect(() => {
+    if (!data?.length) return;
+    setBookings(() => [...bookings, ...data]);
+  }, [data, bookings]);
   // const message = setTimeout(() => {
   //   <AlertMessage toggleMessage={toggleMessage} />;
   // }, 1500);
@@ -80,7 +100,10 @@ const Booking = () => {
                   </button>
                 </td>
                 <td className="text-left py-3 px-4">
-                  <button className="flex items-center gap-2 bg-[#EB1018] px-4 py-1 rounded text-white hover:scale-110 hover:bg-[#8C0C0C] transition duration-300 ease-out hover:ease-in">
+                  <button
+                    onClick={() => deleteBooking(booking)}
+                    className="flex items-center gap-2 bg-[#EB1018] px-4 py-1 rounded text-white hover:scale-110 hover:bg-[#8C0C0C] transition duration-300 ease-out hover:ease-in"
+                  >
                     <MdDelete /> Delete
                   </button>
                 </td>

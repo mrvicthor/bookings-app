@@ -11,48 +11,48 @@ datasource db {
 }
 
 model Account {
-    id String @id @default(autoincrement())
-    userId String
-    type String
-    provider String
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
     providerAccountId String
-    refresh_token String?
-    access_token String?
-    expires_at Int?
-    token_type String?
-    scope String?
-    id_token String?
-    session_state String?
-
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    refresh_token     String?
+    access_token      String?
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id String @id @default()
-    sessionToken String @unique
-    userId String
-    expires DateTime
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id String @id @default()
+    id            String    @id @default(cuid())
+    username          String? @unique
+    email         String?   @unique
+    password String
+    role String? @default("USER")
     createdAt DateTime @default(now())
-    name String?
-    email String @unique
-    emailVerified DateTime?
-    image String?
+    updatedAt DateTime @updatedAt
     bookings Booking[]
-    accounts Account[]
-    sessions Session[]
+    accounts      Account[]
+    sessions      Session[]
 }
 
-model VerificationToken{
-    identifier String 
-    token String
-    expires DateTime 
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
 
     @@unique([identifier, token])
 }
@@ -74,4 +74,6 @@ model Booking{
     softwareInstallation Int
     isDone Boolean @default(false)
     createdAt DateTime @default(now()) 
+    author User @relation(fields: [authorId], references: [id])
+    authorId String
 }

@@ -93,6 +93,16 @@ export const serverRouter = createRouter()
         data: { ...rest },
       });
     },
+  })
+  .mutation("deleteOne", {
+    input: z.object({ id: z.number() }),
+    resolve: async ({ input, ctx }) => {
+      const { id } = input;
+
+      return await ctx.prisma.booking.delete({
+        where: { id },
+      });
+    },
   });
 
 export type ServerRouter = typeof serverRouter;

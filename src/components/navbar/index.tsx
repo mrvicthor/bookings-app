@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/index";
-import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 
 const Navbar = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
+
   return (
     <nav className="bg-[#04040A]">
       <div className="flex gap-8 justify-between items-center px-4 py-2 lg:max-w-[1140px] lg:mx-auto">
@@ -33,20 +38,27 @@ const Navbar = () => {
           </li>
         </ul>
         <div className="flex gap-4 justify-between">
-          <Button
-            value="Log In"
-            styles="text-[#8C948C] hover:text-white"
-            handleClick={() => {
-              signIn("github", {
-                callbackUrl: "http://localhost:3000/bookings",
-              });
-            }}
-          />
-          <Button
-            value="Sign Up"
-            styles="bg-[#0404FC] rounded-md text-white font-bold hover:bg-[#040484]"
-            handleClick={() => console.log("Sign up...")}
-          />
+          {!session && (
+            <>
+              <Button
+                value="Log In"
+                styles="text-[#8C948C] hover:text-white"
+                handleClick={() => router.push("/login")}
+              />
+              <Button
+                value="Sign Up"
+                styles="bg-[#0404FC] rounded-md text-white font-bold hover:bg-[#040484]"
+                handleClick={() => router.push("/signUp")}
+              />
+            </>
+          )}
+          {session && (
+            <Button
+              value="Sign Out"
+              styles="text-[#8C948C] hover:text-white"
+              handleClick={() => signOut({ callbackUrl: "/" })}
+            />
+          )}
         </div>
       </div>
     </nav>
