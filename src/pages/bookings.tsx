@@ -1,5 +1,12 @@
 import { Booking } from "@/components/index";
 import Link from "next/link";
+import { requireAuth } from "@/common/requireAuth";
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return {
+    props: {},
+  };
+});
 
 const Bookings = () => {
   return (

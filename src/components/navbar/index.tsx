@@ -3,10 +3,14 @@ import { Button } from "@/components/index";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
+import { useState } from "react";
 
 const Navbar = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  const [selectedNav, setSelectedNav] = useState<string>("Home");
+
+  const toggleNav = (value: string) => setSelectedNav(value);
 
   return (
     <nav className="bg-[#04040A]">
@@ -16,24 +20,37 @@ const Navbar = () => {
         </Link>
 
         <ul className="flex gap-4 space-x-8">
-          <li>
+          <li onClick={() => toggleNav("Home")}>
             <Link href="/">
-              <a className="text-[#8C948C] hover:text-white">Home</a>
+              <a
+                className={`${
+                  selectedNav === "Home" ? "text-white" : "text-[#8C948C]"
+                } hover:text-white`}
+              >
+                Home
+              </a>
             </Link>
           </li>
-          <li>
-            <Link href="/bookings">
-              <a className="text-[#8C948C] hover:text-white">Bookings</a>
-            </Link>
-          </li>
-          <li>
+          <li onClick={() => toggleNav("About")}>
             <Link href="/about">
-              <a className="text-[#8C948C] hover:text-white">About Us</a>
+              <a
+                className={`${
+                  selectedNav === "About" ? "text-white" : "text-[#8C948C]"
+                } hover:text-white`}
+              >
+                About Us
+              </a>
             </Link>
           </li>
-          <li>
+          <li onClick={() => toggleNav("Contact")}>
             <Link href="/contact">
-              <a className="text-[#8C948C] hover:text-white">Contact Us</a>
+              <a
+                className={`${
+                  selectedNav === "Contact" ? "text-white" : "text-[#8C948C]"
+                } hover:text-white`}
+              >
+                Contact Us
+              </a>
             </Link>
           </li>
         </ul>
@@ -53,11 +70,23 @@ const Navbar = () => {
             </>
           )}
           {session && (
-            <Button
-              value="Sign Out"
-              styles="text-[#8C948C] hover:text-white"
-              handleClick={() => signOut({ callbackUrl: "/" })}
-            />
+            <>
+              <Button
+                value="Bookings"
+                styles="text-[#8C948C] hover:text-white"
+                handleClick={() => router.push("/bookings")}
+              />
+              <Button
+                value="Dashboard"
+                styles="text-[#8C948C] hover:text-white"
+                handleClick={() => router.push("/dashboard")}
+              />
+              <Button
+                value="Sign Out"
+                styles="hover:text-[#8C948C] text-white border border-[#0404FC] rounded"
+                handleClick={() => signOut({ callbackUrl: "/" })}
+              />
+            </>
           )}
         </div>
       </div>

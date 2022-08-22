@@ -1,42 +1,58 @@
-import type { NextPage } from "next";
-import { useSession, signOut } from "next-auth/react";
-
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { requireAuth } from "@/common/requireAuth";
+import { Button } from "@/components/index";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
 });
 
-const Dashboard: NextPage = () => {
-  const { data } = useSession();
-
+const Dashboard = () => {
+  const router = useRouter();
+  const { data: session }: any = useSession();
+  const [toggleCreate, setToggleCreate] = useState<boolean>(false);
+  useEffect(() => {
+    console.log(session);
+  }, [session]);
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content">
-        <div className="max-w-lg">
-          <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
-            You are logged in!
-          </h1>
-          <p className="my-4 text-center leading-loose">
-            You are allowed to visit this page because you have a session,
-            otherwise you would be redirected to the login page.
-          </p>
-          <div className="my-4 bg-gray-700 rounded-lg p-4">
-            <pre>
-              <code>{JSON.stringify(data, null, 2)}</code>
-            </pre>
-          </div>
-          <div className="text-center">
-            <button
-              className="btn btn-secondary"
-              onClick={() => signOut({ callbackUrl: "/" })}
-            >
-              Logout
-            </button>
-          </div>
-        </div>
+    <section className="py-10">
+      <div className="flex justify-between lg:max-w-[1140px] lg:mx-auto lg:px-5">
+        <h1 className="text-xl text-[#8C948C]">Welcome {session.user.email}</h1>
+        {session.user.role === "ADMIN" && (
+          <Button
+            value={`Admin`}
+            styles="lg:px-5 border border-[#0404FC] hover:bg-[#0404FC] hover:text-white ease-in duration-300"
+            handleClick={() => router.push("/admin")}
+          />
+        )}
       </div>
-    </div>
+      <article className="lg:max-w-[1140px] lg:mx-auto lg:px-5 mt-4">
+        {toggleCreate ? (
+          <Button
+            value="Create Booking"
+            styles="lg:px-5 border border-[#0404FC] hover:bg-[#0404FC] hover:text-white"
+            handleClick={() => router.push("/createForm")}
+          />
+        ) : (
+          <>
+            <p className="text-3xl">Want to create a new booking?</p>
+            <div className="flex gap-6 mt-4">
+              <Button
+                value="Yes"
+                styles="lg:px-5 border border-[#0404FC] hover:bg-[#0404FC] hover:text-white"
+                handleClick={() => setToggleCreate(true)}
+              />
+              <Button
+                value="No"
+                styles="lg:px-5 border border-[#0404FC] hover:bg-[#0404FC] hover:text-white"
+                handleClick={() => setToggleCreate(false)}
+              />
+            </div>
+          </>
+        )}
+      </article>
+    </section>
   );
 };
 

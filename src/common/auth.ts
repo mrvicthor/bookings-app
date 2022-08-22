@@ -8,62 +8,68 @@ export const nextAuthOptions: NextAuthOptions = {
   providers: [
     Credentials({
       name: "credentials",
-      credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "johndoe@gmail.com",
-        },
-        password: { label: "Password", type: "password" },
-      },
+      credentials: {},
       authorize: async (credentials, request) => {
-        const creds = await loginSchema.parseAsync(credentials);
+        const creds: any = await loginSchema.parseAsync(credentials);
 
-        const user = await prisma.user.findFirst({
-          where: { email: creds.email },
+        const user: any = await prisma.user.findFirst({
+          where: {
+            email: creds.email,
+          },
         });
 
-        if (!user) {
-          return null;
-        }
-
-        const isValidPassword = await verify(user.password, creds.password);
+        const isValidPassword = await verify(user?.password, creds.password);
 
         if (!isValidPassword) {
           return null;
         }
 
-        return {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-        };
+        if (user && isValidPassword) {
+          return {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            role: user.role,
+          };
+        }
+        return null;
       },
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user }) => {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-      }
+    async session(arg) {
+      arg.session.user = arg.token.user as any;
 
-      return token;
+      return arg.session;
     },
-    session: async ({ session, token }) => {
-      if (token) {
-        session.id = token.id;
-      }
+    async jwt(arg) {
+      if (arg.user) arg.token.user = arg.user;
 
-      return session;
+      return arg.token;
     },
+    // jwt: async ({ token, user }) => {
+    //   console.log("JWT", token, user);
+    //   if (user && user.id) {
+    //     token.id = user.id;
+    //   }
+    //   // if (user?.role) {
+    //   //   token.role = user.role;
+    //   // }
+
+    //   return token;
+    // },
+    // session: async ({ session, token, user }) => {
+    //   console.log("it is session", session, user);
+    //   session.user?.role = user.role;
+
+    //   return session;
+    // },
   },
   jwt: {
     secret: "super-secret",
     maxAge: 15 * 24 * 30 * 60, // 15 days
   },
   pages: {
-    signIn: "/",
-    newUser: "/sign-up",
+    signIn: "/login",
   },
 };
