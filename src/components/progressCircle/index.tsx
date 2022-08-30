@@ -7,18 +7,26 @@ const ProgressCircle = ({ value }: Props) => {
   const [strokeDasharray, setStrokeDasharray] = useState<number>(280);
   const [strokeOffset, setStrokeOffset] = useState<number>(278);
   const [progress, setProgress] = useState<number>(value);
+  const [counter, setCounter] = useState<number>(0);
   useEffect(() => {
     const progressOffset = ((100 - progress) / 100) * strokeDasharray;
     setStrokeOffset(progressOffset);
+    let count = 0;
+    let interval = undefined;
+    interval = setInterval(() => {
+      count === value ? value : (count += 1);
+      setCounter(count);
+    }, 10);
     console.log(strokeOffset);
     circleRef.current.style = "transition: stroke-dashoffset 850ms ease-in-out";
     console.log(circleRef);
   }, [setStrokeOffset, progress, strokeOffset]);
+
   return (
     <div className="rating flex-[50%]">
       <div className="outer">
         <div className="inner flex items-center justify-center">
-          <div className="text-[#8C948C] font-semibold">{value}%</div>
+          <div className="text-[#8C948C] font-semibold">{counter}%</div>
         </div>
       </div>
 

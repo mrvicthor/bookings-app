@@ -32,9 +32,7 @@ const Booking = () => {
     if (!data?.length) return;
     setBookings(() => [...bookings, ...data]);
   }, [data, bookings]);
-  // const message = setTimeout(() => {
-  //   <AlertMessage toggleMessage={toggleMessage} />;
-  // }, 1500);
+
   return (
     <div className="pb-4 w-full lg:max-w-[1140px] lg:mx-auto">
       <div className="shadow overflow-hidden rounded border-b border-gray-200">

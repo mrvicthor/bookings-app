@@ -6,5 +6,16 @@ import Button from "@/components/button";
 import SignUp from "@/components/signup";
 import Banner from "@/components/banner";
 import ProgressCircle from "@/components/progressCircle";
+import Table from "@/components/table";
 
-export { Booking, AlertMessage, Layout, Navbar, Button, SignUp, Banner, ProgressCircle };
+export {
+  Booking,
+  AlertMessage,
+  Layout,
+  Navbar,
+  Button,
+  SignUp,
+  Banner,
+  ProgressCircle,
+  Table,
+};

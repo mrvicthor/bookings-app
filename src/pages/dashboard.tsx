@@ -1,12 +1,14 @@
 import { useSession } from "next-auth/react";
+import { trpc } from "@/utils/trpc";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { requireAuth } from "@/common/requireAuth";
-import { Button } from "@/components/index";
+import { Button, Table } from "@/components/index";
 import { FcSalesPerformance } from "react-icons/fc";
 import { AiOutlineAccountBook } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa";
 import { ProgressCircle } from "@/components/index";
+import { Booking } from "@/models/booking";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -15,10 +17,14 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const Dashboard = () => {
   const router = useRouter();
   const { data: session }: any = useSession();
+  const { data } = trpc.useQuery(["bookings.getAll"]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
+    if (!data?.length) return;
+    setBookings(() => [...bookings, ...data]);
     console.log(session);
-  }, [session]);
+  }, [session, data, bookings]);
 
   return (
     <section className="py-10">
@@ -29,13 +35,20 @@ const Dashboard = () => {
           <h2 className="text-xl text-[#8C948C]">
             Welcome {session?.user.email}
           </h2>
-          {session?.user.role === "ADMIN" && (
+          <div className="flex gap-4">
             <Button
-              value={`Admin`}
-              styles="lg:px-5 text-[#0404FC] border border-[#0404FC] hover:bg-[#0404FC] hover:text-white ease-in duration-300"
-              handleClick={() => router.push("/admin")}
+              value="Create Booking"
+              styles="lg:px-5 text-[#8C948C] border border-[#8C948C] hover:text-white hover:bg-[#8C948C] ease-in duration-300"
+              handleClick={() => router.push("/createBooking")}
             />
-          )}
+            {session?.user.role === "ADMIN" && (
+              <Button
+                value={`Admin`}
+                styles="lg:px-5 text-[#0404FC] border border-[#0404FC] hover:bg-[#0404FC] hover:text-white ease-in duration-300"
+                handleClick={() => router.push("/admin")}
+              />
+            )}
+          </div>
         </div>
         <article className="mt-4 ">
           <div className=" flex gap-8">
@@ -72,6 +85,22 @@ const Dashboard = () => {
               </div>
               <ProgressCircle value={40} />
             </div>
+          </div>
+          <div className="mt-4">
+            <Table
+              names={[
+                "S/N",
+                "Username",
+                "First Name",
+                "Last Name",
+                "Item",
+                "Fault",
+                "Report",
+                "Price",
+                "",
+              ]}
+              bookings={bookings}
+            />
           </div>
         </article>
       </div>

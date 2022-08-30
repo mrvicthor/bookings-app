@@ -1,6 +1,6 @@
 import { useForm, useController, UseControllerProps } from "react-hook-form";
 import { useRouter } from "next/router";
-import { trpc } from "./../utils/trpc";
+import { trpc } from "../utils/trpc";
 
 type FormInput = {
   FirstName: string;
@@ -68,10 +68,10 @@ const CreateBooking = () => {
   };
 
   return (
-    <div className="bg-[#C8C8C8] py-10 h-[100%]">
+    <div className="bg-[#C8C8C8] py-10">
       <h1 className="text-center  text-2xl font-bold">Booking Form</h1>
       <form
-        className="mx-auto max-w-2xl px-6 py-4 space-y-3"
+        className="mx-auto max-w-5xl px-6 py-4 space-y-3"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex gap-8">
