@@ -13,10 +13,10 @@ const Navbar = () => {
   const toggleNav = (value: string) => setSelectedNav(value);
 
   return (
-    <nav className="bg-[#04040A]">
-      <div className="flex gap-8 justify-between items-center px-4 py-2 lg:max-w-[1140px] lg:mx-auto">
+    <nav className="bg-[#04040A] w-full overflow-hidden">
+      <div className="flex gap-8 justify-between items-center px-4 py-2 md:max-w-[1040px] md:mx-auto">
         <Link href="/">
-          <a className="font-bold text-[#8C948C] hover:text-white">JMTRAX</a>
+          <a className="font-bold text-[#0404FC] hover:text-white">JMTRAX</a>
         </Link>
 
         <ul className="flex gap-4 space-x-8">
@@ -83,7 +83,7 @@ const Navbar = () => {
               />
               <Button
                 value="Sign Out"
-                styles="hover:text-[#8C948C] text-white border border-[#0404FC] rounded"
+                styles="hover:text-white text-[#0404FC] border border-[#0404FC] rounded"
                 handleClick={() => signOut({ callbackUrl: "/" })}
               />
             </>

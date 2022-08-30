@@ -48,7 +48,51 @@
   .helper {
     box-shadow: -20px -20px 0px 0px #8c948c;
   }
+  .bannerAnimate {
+    position: relative;
+    width: max-content;
+  }
 
+  .bannerAnimate::before,
+  .bannerAnimate::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .bannerAnimate::before {
+    background: #141414;
+    /* background: #171517; */
+    animation: typewriter 6s steps(17) 1s forwards;
+  }
+
+  .bannerAnimate::after {
+    width: 0.2em;
+    background: white;
+    animation: typewriter 6s steps(17) 1s forwards,
+      blink 800ms steps(17) infinite;
+  }
+  @keyframes typewriter {
+    to {
+      left: 100%;
+    }
+  }
+
+  @keyframes blink {
+    to {
+      background: transparent;
+    }
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
   /* CSS */
   .button-86 {
     all: unset;
@@ -69,6 +113,9 @@
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
+    opacity: 0;
+    transform: translateY(3rem);
+    animation: fadeInUp 2s ease 7s forwards;
   }
 
   .button-86::after,
@@ -116,4 +163,55 @@
     transition: 0s;
     transform: translate(0, 5%);
   }
+
+  .dashboardCard {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding-block: 1rem;
+  }
+
+  .rating {
+    width: 100px;
+    height: 100px;
+    position: relative;
+  }
+
+  .outer {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+      -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+    padding: 10px;
+  }
+
+  .inner {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    box-shadow: inset 4px 4px 6px -1px rgba(0, 0, 0, 0.2),
+      inset -4px -4px 6px -1px rgba(255, 255, 255, 0.7),
+      -0.5px -0.5px 0px rgba(255, 255, 255, 1),
+      0.5px 0.5px 0px rgba(0, 0, 0, 0.15),
+      0px 12px 10px -10px rgba(0, 0, 0, 0.05);
+  }
+  circle {
+    fill: none;
+    stroke: url(#GradientColor);
+    stroke-width: 10px;
+    /* stroke-dasharray: 442;
+    stroke-dashoffset: 442; */
+    /* animation: anim 2s linear forwards; */
+  }
+
+  .rating svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  /* @keyframes anim {
+    100% {
+      stroke-dashoffset: 287;
+    }
+  } */
 }

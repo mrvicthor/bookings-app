@@ -4,15 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const Home: NextPage = () => {
   return (
-    <div
-      // style={{
-      //   backgroundImage: "url(bg-blue.jpg)",
-      //   backgroundPosition: "center",
-      //   backgroundRepeat: "no-repeat",
-      //   backgroundSize: "cover",
-      // }}
-      className="bg-white h-[92.6vh]"
-    >
+    <div>
       <AnimatePresence exitBeforeEnter>
         <motion.div
           initial={{ y: 10, opacity: 0 }}
