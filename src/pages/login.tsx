@@ -25,6 +25,10 @@ const Login = () => {
       callbackUrl: "/dashboard",
     }).then((response) => {
       if (!response?.ok) {
+        console.log(response);
+        response?.error === "pchstr must be a non-empty string"
+          ? setErrMsg("No account with that email address, please sign up")
+          : "";
         response?.error === "CredentialsSignin"
           ? setErrMsg("Invalid email address or password...")
           : "";

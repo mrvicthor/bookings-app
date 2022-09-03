@@ -30,13 +30,13 @@ const Booking = () => {
 
   useEffect(() => {
     if (!data?.length) return;
-    setBookings(() => [...bookings, ...data]);
-  }, [data, bookings]);
+    setBookings(() => [...data]);
+  }, [data]);
 
   return (
-    <div className="pb-4 w-full lg:max-w-[1140px] lg:mx-auto">
+    <div className="pb-4 w-full flex justify-center items-center">
       <div className="shadow overflow-hidden rounded border-b border-gray-200">
-        <table className="min-w-full bg-white">
+        <table className="max-w-[1040px] bg-white">
           <thead className="bg-gray-800 text-white">
             <tr>
               <th className=" text-left py-3 px-3 uppercase font-semibold text-sm">

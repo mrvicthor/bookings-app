@@ -83,7 +83,7 @@ const Navbar = () => {
               />
               <Button
                 value="Sign Out"
-                styles="hover:text-white text-[#0404FC] border border-[#0404FC] rounded"
+                styles="hover:text-white text-[#1738F3] border border-[#1738F3] rounded hover:bg-[#1738F3] hover:text-white"
                 handleClick={() => signOut({ callbackUrl: "/" })}
               />
             </>

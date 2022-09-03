@@ -2,7 +2,6 @@ import { createRouter } from "./context";
 import { hash } from "argon2";
 import { signUpSchema } from "@/common/validate/auth";
 import * as trpc from "@trpc/server";
-import { z } from "zod";
 
 export const userRouter = createRouter()
   .mutation("signUp", {
@@ -23,7 +22,11 @@ export const userRouter = createRouter()
       const hashedPassword = await hash(password);
 
       const result = await ctx.prisma.user.create({
-        data: { username, email, password: hashedPassword },
+        data: {
+          username,
+          email,
+          password: hashedPassword,
+        },
       });
 
       return {

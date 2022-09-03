@@ -74,6 +74,6 @@ model Booking{
     softwareInstallation Int
     isDone Boolean @default(false)
     createdAt DateTime @default(now()) 
-    author User @relation(fields: [authorId], references: [id])
-    authorId String
+    author User? @relation(fields: [authorId], references: [id])
+    authorId String?
 }

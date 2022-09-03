@@ -47,23 +47,6 @@ export const nextAuthOptions: NextAuthOptions = {
 
       return arg.token;
     },
-    // jwt: async ({ token, user }) => {
-    //   console.log("JWT", token, user);
-    //   if (user && user.id) {
-    //     token.id = user.id;
-    //   }
-    //   // if (user?.role) {
-    //   //   token.role = user.role;
-    //   // }
-
-    //   return token;
-    // },
-    // session: async ({ session, token, user }) => {
-    //   console.log("it is session", session, user);
-    //   session.user?.role = user.role;
-
-    //   return session;
-    // },
   },
   jwt: {
     secret: "super-secret",
