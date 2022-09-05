@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import { Button } from "@/components/index";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 
 type FormInput = {
   FirstName: string;
@@ -19,6 +20,7 @@ type FormInput = {
   Brand: string;
   HardwareInstall: number;
   SoftwareInstall: number;
+  authorId: string;
 };
 
 const InputField = (props: UseControllerProps<FormInput>) => {
@@ -28,6 +30,7 @@ const InputField = (props: UseControllerProps<FormInput>) => {
       <label htmlFor={props.name}>{props.name}</label>
       <input
         {...field}
+        id={props.name}
         placeholder={props.name}
         className="w-[100%] rounded py-2 px-6"
       />
@@ -36,6 +39,7 @@ const InputField = (props: UseControllerProps<FormInput>) => {
 };
 
 const CreateBooking = () => {
+  const { data: session }: any = useSession();
   const router = useRouter();
   const { handleSubmit, control } = useForm<FormInput>({
     mode: "onChange",
@@ -66,6 +70,7 @@ const CreateBooking = () => {
       hardwareInstallation: Number(data.HardwareInstall),
       softwareInstallation: Number(data.SoftwareInstall),
       isDone: false,
+      authorId: session.user.id,
     });
   };
 

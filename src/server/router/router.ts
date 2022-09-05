@@ -27,6 +27,7 @@ export const serverRouter = createRouter()
         itemModel,
         engineerReport,
         brand,
+        authorId,
       } = input;
       return await ctx.prisma.booking.create({
         data: {
@@ -44,6 +45,9 @@ export const serverRouter = createRouter()
           itemModel,
           engineerReport,
           brand,
+          author: {
+            connect: { id: authorId },
+          },
         },
       });
     },

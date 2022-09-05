@@ -1,7 +1,11 @@
 import { Booking } from "@/models/booking";
 import { capitalizeFirstLetter } from "@/hooks/capitalize";
 import { BiDetail } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { trpc } from "@/utils/trpc";
+import { useCallback } from "react";
 
 interface Props {
   names: string[];
@@ -9,6 +13,22 @@ interface Props {
 }
 
 const Table = ({ names, bookings }: Props) => {
+  const deleteOneMutation = trpc.useMutation(["bookings.deleteOne"], {
+    onSuccess: () => console.log("Delete successful"),
+  });
+
+  const deleteBooking = useCallback(
+    (item: Booking) => {
+      if (bookings?.length) {
+        deleteOneMutation.mutate({
+          id: item.id,
+        });
+      }
+    },
+    [bookings, deleteOneMutation]
+  );
+
+  const { data: session }: any = useSession();
   const router = useRouter();
   return bookings.length === 0 ? (
     <h2 className="text-[#8C948C] text-center py-2 text-lg">
@@ -18,8 +38,11 @@ const Table = ({ names, bookings }: Props) => {
     <table className="min-w-full bg-white">
       <thead className="bg-gray-800 text-white">
         <tr>
-          {names.map((name) => (
-            <th className=" text-left py-3 px-3 uppercase font-semibold text-sm">
+          {names.map((name, index) => (
+            <th
+              key={index}
+              className=" text-left py-3 px-3 uppercase font-semibold text-sm"
+            >
               {name}
             </th>
           ))}
@@ -55,6 +78,16 @@ const Table = ({ names, bookings }: Props) => {
                 <BiDetail /> Details
               </button>
             </td>
+            {session?.user.role === "ADMIN" && (
+              <td className="text-left py-3 px-4">
+                <button
+                  onClick={() => deleteBooking(booking)}
+                  className="flex items-center gap-2 bg-[#EB1018] px-4 py-1 rounded text-white hover:scale-110 hover:bg-[#8C0C0C] transition duration-300 ease-out hover:ease-in"
+                >
+                  <MdDelete /> Delete
+                </button>
+              </td>
+            )}
           </tr>
         ))}
       </tbody>

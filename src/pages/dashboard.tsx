@@ -22,9 +22,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!data?.length) return;
-    setBookings(() => [...bookings, ...data]);
+    setBookings(() => [...data]);
     console.log(session);
-  }, [session, data, bookings]);
+  }, [session, data]);
 
   return (
     <section className="py-10">

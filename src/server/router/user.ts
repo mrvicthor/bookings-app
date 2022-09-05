@@ -2,6 +2,7 @@ import { createRouter } from "./context";
 import { hash } from "argon2";
 import { signUpSchema } from "@/common/validate/auth";
 import * as trpc from "@trpc/server";
+import { z } from "zod";
 
 export const userRouter = createRouter()
   .mutation("signUp", {
@@ -37,11 +38,23 @@ export const userRouter = createRouter()
       };
     },
   })
-  .query("getAdmin", {
-    resolve: async ({ ctx }) => {
-      const res = await ctx.prisma.user.findMany({
-        where: { role: "ADMIN" },
+  .query("getUserById", {
+    input: z.object({
+      id: z.string(),
+    }),
+    resolve: async ({ input }) => {
+      const { id } = input;
+      const userId = await prisma?.user.findUnique({
+        where: {
+          id,
+        },
       });
+      return userId;
+    },
+  })
+  .query("getAllUsers", {
+    resolve: async ({ ctx }) => {
+      const res = await ctx.prisma.user.findMany();
       return res;
     },
   });

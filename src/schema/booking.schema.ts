@@ -16,6 +16,7 @@ export const createBookingSchema = z.object({
   hardwareInstallation: z.number(),
   softwareInstallation: z.number(),
   isDone: z.boolean(),
+  authorId: z.string(),
 });
 
 export type CreateBookingInput = z.TypeOf<typeof createBookingSchema> | any;
