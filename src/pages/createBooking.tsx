@@ -1,4 +1,4 @@
-import { useForm, useController, UseControllerProps } from "react-hook-form";
+import { Path, useForm, UseFormRegister, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import { Button } from "@/components/index";
@@ -6,32 +6,37 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 
 type FormInput = {
-  FirstName: string;
-  LastName: string;
+  "First Name": string;
+  "Last Name": string;
   Email: string;
-  Phone: string;
+  "Phone Number": string;
   Street: string;
   City: string;
-  PostCode: string;
+  "Post Code": string;
   Fault: string;
-  EngineerReport: string;
+  "Engineer Report": string;
   Product: string;
-  ItemModel: string;
+  "Item Model": string;
   Brand: string;
-  HardwareInstall: number;
-  SoftwareInstall: number;
+  "Hardware Install": number;
+  "Software Install": number;
   authorId: string;
 };
 
-const InputField = (props: UseControllerProps<FormInput>) => {
-  const { field } = useController(props);
+type InputProps = {
+  label: Path<FormInput>;
+  register: UseFormRegister<FormInput>;
+  required: boolean;
+};
+
+const InputField = ({ label, register, required }: InputProps) => {
   return (
     <div className="flex flex-col w-[100%]">
-      <label htmlFor={props.name}>{props.name}</label>
+      <label htmlFor={label}>{label}</label>
       <input
-        {...field}
-        id={props.name}
-        placeholder={props.name}
+        {...register(label, { required })}
+        id={label}
+        placeholder={label}
         className="w-[100%] rounded py-2 px-6"
       />
     </div>
@@ -41,9 +46,11 @@ const InputField = (props: UseControllerProps<FormInput>) => {
 const CreateBooking = () => {
   const { data: session }: any = useSession();
   const router = useRouter();
-  const { handleSubmit, control } = useForm<FormInput>({
-    mode: "onChange",
-  });
+  const { handleSubmit, register } = useForm<FormInput>();
+
+  const checkKeyDown = (event: KeyboardEvent) => {
+    if (event.code === "Enter") event.preventDefault();
+  };
 
   const insertMutation = trpc.useMutation(["bookings.insertOne"], {
     onSuccess: () => {
@@ -53,22 +60,22 @@ const CreateBooking = () => {
     },
   });
 
-  const onSubmit = (data: FormInput) => {
+  const onSubmit: SubmitHandler<FormInput> = (data) => {
     insertMutation.mutate({
-      firstName: data.FirstName,
-      lastName: data.LastName,
+      firstName: data["First Name"],
+      lastName: data["Last Name"],
       email: data.Email,
-      phone: data.Phone,
+      phone: data["Phone Number"],
       street: data.Street,
       city: data.City,
-      postalCode: data.PostCode,
+      postalCode: data["Post Code"],
       fault: data.Fault,
-      engineerReport: data.EngineerReport,
+      engineerReport: data["Engineer Report"],
       item: data.Product,
-      itemModel: data.ItemModel,
+      itemModel: data["Item Model"],
       brand: data.Brand,
-      hardwareInstallation: Number(data.HardwareInstall),
-      softwareInstallation: Number(data.SoftwareInstall),
+      hardwareInstallation: Number(data["Hardware Install"]),
+      softwareInstallation: Number(data["Software Install"]),
       isDone: false,
       authorId: session.user.id,
     });
@@ -84,89 +91,36 @@ const CreateBooking = () => {
           transition={{ duration: 1 }}
           className="booking  max-w-4xl min-h-[80vh] px-6 py-4 space-y-3"
           onSubmit={handleSubmit(onSubmit)}
+          onKeyPress={(event: React.FormEvent<HTMLFormElement>) =>
+            event.preventDefault()
+          }
         >
           <h1 className="text-center  text-2xl font-bold">Booking Form</h1>
 
           <div className="flex gap-8">
-            <InputField
-              control={control}
-              name="FirstName"
-              rules={{ required: true }}
-            />
-            <InputField
-              control={control}
-              name="LastName"
-              rules={{ required: true }}
-            />
-            <InputField
-              control={control}
-              name="Phone"
-              rules={{ required: true }}
-            />
+            <InputField label="First Name" register={register} required />
+            <InputField label="Last Name" register={register} required />
+            <InputField label="Phone Number" register={register} required />
           </div>
           <div className="flex gap-8">
-            <InputField
-              control={control}
-              name="Email"
-              rules={{ required: true }}
-            />
+            <InputField label="Email" register={register} required />
           </div>
 
           <div className="flex gap-8">
-            <InputField
-              name="Street"
-              control={control}
-              rules={{ required: true }}
-            />
-            <InputField
-              name="City"
-              control={control}
-              rules={{ required: true }}
-            />
-            <InputField
-              name="PostCode"
-              control={control}
-              rules={{ required: true }}
-            />
+            <InputField label="Street" register={register} required />
+            <InputField label="City" register={register} required />
+            <InputField label="Post Code" register={register} required />
           </div>
           <div className="flex gap-8">
-            <InputField
-              name="Fault"
-              control={control}
-              rules={{ required: true }}
-            />
-            <InputField
-              name="EngineerReport"
-              control={control}
-              rules={{ required: true }}
-            />
-            <InputField
-              name="Product"
-              control={control}
-              rules={{ required: true }}
-            />
-            <InputField
-              name="ItemModel"
-              control={control}
-              rules={{ required: true }}
-            />
+            <InputField label="Fault" register={register} required />
+            <InputField label="Engineer Report" register={register} required />
+            <InputField label="Product" register={register} required />
+            <InputField label="Item Model" register={register} required />
           </div>
           <div className="flex gap-8">
-            <InputField
-              name="Brand"
-              control={control}
-              rules={{ required: true }}
-            />
-            <InputField
-              name="HardwareInstall"
-              control={control}
-              rules={{ required: true }}
-            />
-            <InputField
-              name="SoftwareInstall"
-              control={control}
-              rules={{ required: true }}
-            />
+            <InputField label="Brand" register={register} required />
+            <InputField label="Hardware Install" register={register} required />
+            <InputField label="Software Install" register={register} required />
           </div>
           <div className="flex gap-8">
             <Button
@@ -176,7 +130,7 @@ const CreateBooking = () => {
             />
             <button
               type="submit"
-              className="w-[50%] bg-[#048444] rounded py-2 font-medium text-white hoverAnimation relative z-[1]"
+              className="w-[50%] bg-[#048444] rounded py-2 font-medium text-white cursor-pointer hoverAnimation relative z-[1]"
             >
               Submit
             </button>

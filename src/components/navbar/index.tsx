@@ -71,11 +71,17 @@ const Navbar = () => {
           )}
           {session && (
             <>
-              <Button
-                value="Bookings"
-                styles="text-[#8C948C] hover:text-white"
-                handleClick={() => router.push("/bookings")}
-              />
+              <Link href="/bookings">
+                <a
+                  onClick={() => toggleNav("Bookings")}
+                  className={`${
+                    selectedNav === "Bookings" ? "text-white" : "text-[#8C948C]"
+                  } hover:text-white pt-1.5`}
+                >
+                  Bookings
+                </a>
+              </Link>
+
               <Button
                 value="Dashboard"
                 styles="text-[#8C948C] hover:text-white"

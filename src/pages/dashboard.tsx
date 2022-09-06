@@ -86,7 +86,7 @@ const Dashboard = () => {
               <ProgressCircle value={40} />
             </div>
           </div>
-          <div className="mt-4">
+          <div className="mt-4 shadow overflow-hidden rounded border-b border-gray-200">
             <Table
               names={[
                 "S/N",
