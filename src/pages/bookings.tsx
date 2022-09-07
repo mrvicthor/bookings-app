@@ -14,7 +14,7 @@ const Bookings = () => {
       <div className="md:max-w-[1040px] md:mx-auto space-y-2 md:px-5">
         <div className="flex items-center gap-8">
           <h1 className="text-center font-semibold text-2xl">Bookings</h1>
-          <Link href="/createForm">
+          <Link href="/createBooking">
             <a className="text-[#8C948C]  hover:text-white hover:bg-[#8C948C] border border-[#8C948C] px-4 py-3 rounded ml-auto">
               Create New Booking
             </a>

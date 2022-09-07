@@ -48,10 +48,6 @@ const CreateBooking = () => {
   const router = useRouter();
   const { handleSubmit, register } = useForm<FormInput>();
 
-  const checkKeyDown = (event: KeyboardEvent) => {
-    if (event.code === "Enter") event.preventDefault();
-  };
-
   const insertMutation = trpc.useMutation(["bookings.insertOne"], {
     onSuccess: () => {
       router.push("/bookings");
@@ -90,15 +86,12 @@ const CreateBooking = () => {
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 1 }}
           className="booking  max-w-4xl min-h-[80vh] px-6 py-4 space-y-3"
-          onSubmit={handleSubmit(onSubmit)}
-          onKeyPress={(event: React.FormEvent<HTMLFormElement>) =>
-            event.preventDefault()
-          }
         >
           <h1 className="text-center  text-2xl font-bold">Booking Form</h1>
 
           <div className="flex gap-8">
             <InputField label="First Name" register={register} required />
+
             <InputField label="Last Name" register={register} required />
             <InputField label="Phone Number" register={register} required />
           </div>
@@ -129,7 +122,8 @@ const CreateBooking = () => {
               handleClick={() => router.push("/dashboard")}
             />
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit(onSubmit)}
               className="w-[50%] bg-[#048444] rounded py-2 font-medium text-white cursor-pointer hoverAnimation relative z-[1]"
             >
               Submit
