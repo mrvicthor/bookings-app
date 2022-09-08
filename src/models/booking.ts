@@ -1,5 +1,6 @@
 export interface Booking {
   id: number;
+  author: Author;
   firstName: string;
   lastName: string;
   email: string;
@@ -15,4 +16,8 @@ export interface Booking {
   hardwareInstallation: number;
   softwareInstallation: number;
   isDone: boolean;
+}
+
+interface Author {
+  username: string;
 }

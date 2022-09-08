@@ -6,7 +6,11 @@ import { z } from "zod";
 export const serverRouter = createRouter()
   .query("getAll", {
     async resolve({ ctx }) {
-      return await ctx.prisma.booking.findMany();
+      return await ctx.prisma.booking.findMany({
+        include: {
+          author: true,
+        },
+      });
     },
   })
   .mutation("insertOne", {

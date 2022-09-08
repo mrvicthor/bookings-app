@@ -52,6 +52,7 @@ const Table = ({ names, bookings }: Props) => {
         {bookings?.map((booking) => (
           <tr key={booking.id}>
             <td className=" text-left py-3 px-4">{booking.id}</td>
+            <td className=" text-left py-3 px-4">{booking.author.username}</td>
             <td className=" text-left py-3 px-4">
               {capitalizeFirstLetter(booking.firstName)}
             </td>

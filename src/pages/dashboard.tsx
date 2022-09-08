@@ -1,14 +1,13 @@
 import { useSession } from "next-auth/react";
-import { trpc } from "@/utils/trpc";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { requireAuth } from "@/common/requireAuth";
-import { Button, Table } from "@/components/index";
+import { Button, Booking } from "@/components/index";
 import { FcSalesPerformance } from "react-icons/fc";
 import { AiOutlineAccountBook } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa";
 import { ProgressCircle } from "@/components/index";
-import { Booking } from "@/models/booking";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -17,14 +16,10 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const Dashboard = () => {
   const router = useRouter();
   const { data: session }: any = useSession();
-  const { data } = trpc.useQuery(["bookings.getAll"]);
-  const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
-    if (!data?.length) return;
-    setBookings(() => [...data]);
     console.log(session);
-  }, [session, data]);
+  }, [session]);
 
   return (
     <section className="py-10">
@@ -86,21 +81,8 @@ const Dashboard = () => {
               <ProgressCircle value={40} />
             </div>
           </div>
-          <div className="mt-4 shadow overflow-hidden rounded border-b border-gray-200">
-            <Table
-              names={[
-                "S/N",
-                "Username",
-                "First Name",
-                "Last Name",
-                "Item",
-                "Fault",
-                "Report",
-                "Price",
-                "",
-              ]}
-              bookings={bookings}
-            />
+          <div className="mt-4">
+            <Booking />
           </div>
         </article>
       </div>
