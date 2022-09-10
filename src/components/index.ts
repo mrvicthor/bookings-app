@@ -1,4 +1,3 @@
-import Booking from "@/components/booking";
 import AlertMessage from "@/components/alertMessage";
 import Layout from "@/components/layout";
 import Navbar from "@/components/navbar";
@@ -9,7 +8,6 @@ import ProgressCircle from "@/components/progressCircle";
 import Table from "@/components/table";
 
 export {
-  Booking,
   AlertMessage,
   Layout,
   Navbar,

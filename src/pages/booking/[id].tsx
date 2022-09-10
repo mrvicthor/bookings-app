@@ -4,12 +4,12 @@ import { useRouter } from "next/router";
 import { capitalizeFirstLetter } from "@/hooks/capitalize";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { useCallback, useState } from "react";
-import { Booking } from "@/models/booking";
 
 const DetailsPage = () => {
   const router = useRouter();
   const id = parseInt(useRouter().query.id as string, 10);
   const bookingQuery = trpc.useQuery(["bookings.byId", { id }]);
+  console.log(bookingQuery);
   const [completed, setCompleted] = useState<boolean>(false);
 
   const updateOneMutation = trpc.useMutation(["bookings.updateBooking"], {
@@ -17,7 +17,7 @@ const DetailsPage = () => {
   });
 
   const updateOne = useCallback(
-    (item: Booking) => {
+    (item: any) => {
       updateOneMutation.mutate({
         ...item,
         isDone: !item.isDone,
@@ -54,11 +54,13 @@ const DetailsPage = () => {
     isDone,
     hardwareInstallation,
     softwareInstallation,
+    authorId,
   } = data;
 
+  console.log(data);
   return (
     <div className="px-4 py-4">
-      <div className="border mt-5 rounded-md mx-auto w-[50%] space-y-4 px-8 py-4">
+      <div className="border mt-5 rounded-md mx-auto w-[60%] space-y-4 px-8 py-4">
         <button
           onClick={() => router.push("/bookings")}
           className="text-white bg-[#3C3C44] flex items-center gap-2 px-3 py-1 rounded hover:opacity-70"
@@ -71,7 +73,7 @@ const DetailsPage = () => {
 
         <div className="grid grid-cols-1 divide-y">
           <div className="grid grid-cols-2 divide-x">
-            <div className=" py-2 flex flex-col items-center">
+            <div className=" py-2 flex flex-col items-center px-1">
               <h3 className="opacity-70 text-xs">Email:</h3>
               <p className="font-semibold text-2xl">{email}</p>
             </div>

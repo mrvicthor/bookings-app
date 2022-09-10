@@ -1,9 +1,10 @@
 import { useSession } from "next-auth/react";
-
+import { trpc } from "@/utils/trpc";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { Booking } from "@/models/booking";
 import { requireAuth } from "@/common/requireAuth";
-import { Button, Booking } from "@/components/index";
+import { Button, Table } from "@/components/index";
 import { FcSalesPerformance } from "react-icons/fc";
 import { AiOutlineAccountBook } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa";
@@ -16,10 +17,15 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const Dashboard = () => {
   const router = useRouter();
   const { data: session }: any = useSession();
+  const { data }: any = trpc.useQuery(["bookings.getAll"]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
-    console.log(session);
-  }, [session]);
+    if (!data?.length) return;
+    setBookings(() => [...data]);
+    console.log(bookings);
+    console.log(data);
+  }, [session, data]);
 
   return (
     <section className="py-10">
@@ -81,8 +87,42 @@ const Dashboard = () => {
               <ProgressCircle value={40} />
             </div>
           </div>
-          <div className="mt-4">
-            <Booking />
+
+          <div className="pb-4 w-full mt-4">
+            <div className="shadow overflow-hidden rounded border-b border-gray-200">
+              {session?.user.role === "ADMIN" ? (
+                <Table
+                  names={[
+                    "S/N",
+                    "Cashier Name",
+                    "First Name",
+                    "Last Name",
+                    "Item",
+                    "Fault",
+                    "Comment",
+                    "Repair Cost",
+                    "",
+                    "",
+                  ]}
+                  bookings={bookings}
+                />
+              ) : (
+                <Table
+                  names={[
+                    "S/N",
+                    "Cashier Name",
+                    "First Name",
+                    "Last Name",
+                    "Item",
+                    "Fault",
+                    "Comment",
+                    "Repair Cost",
+                    "",
+                  ]}
+                  bookings={bookings}
+                />
+              )}
+            </div>
           </div>
         </article>
       </div>

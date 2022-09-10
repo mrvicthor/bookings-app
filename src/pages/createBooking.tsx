@@ -1,4 +1,6 @@
 import { Path, useForm, UseFormRegister, SubmitHandler } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import { Button } from "@/components/index";
@@ -44,15 +46,17 @@ const InputField = ({ label, register, required }: InputProps) => {
 };
 
 const CreateBooking = () => {
+  const notify = () => toast("Booking created successfully");
   const { data: session }: any = useSession();
   const router = useRouter();
   const { handleSubmit, register } = useForm<FormInput>();
 
   const insertMutation = trpc.useMutation(["bookings.insertOne"], {
     onSuccess: () => {
+      notify();
       router.push("/bookings");
 
-      console.log("Booking Created Successfully...");
+      // console.log("Booking Created Successfully...");
     },
   });
 
@@ -79,6 +83,7 @@ const CreateBooking = () => {
 
   return (
     <div className="flex justify-center items-center bg-gradient-to-r from-[#304352] to-[#d7d2cc] py-10 ">
+      <ToastContainer />
       <AnimatePresence exitBeforeEnter>
         <motion.form
           initial={{ y: 10, opacity: 0 }}
