@@ -6,6 +6,7 @@ import SignUp from "@/components/signup";
 import Banner from "@/components/banner";
 import ProgressCircle from "@/components/progressCircle";
 import Table from "@/components/table";
+import Card from "@/components/card";
 
 export {
   AlertMessage,
@@ -16,4 +17,5 @@ export {
   Banner,
   ProgressCircle,
   Table,
+  Card,
 };

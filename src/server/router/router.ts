@@ -74,6 +74,19 @@ export const serverRouter = createRouter()
       return booking;
     },
   })
+  // .query("byUser", {
+  //   input: z.object({ email: z.string() }),
+  //   resolve: async ({ input }) => {
+  //     const { email } = input;
+  //     const bookings = await prisma?.bookings.findMany({
+  //       where: {author['email']: email },
+  //       include: {
+  //         author: true,
+  //       },
+  //     });
+  //     return bookings;
+  //   },
+  // })
   .mutation("updateBooking", {
     input: z.object({
       id: z.number(),

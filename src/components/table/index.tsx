@@ -13,8 +13,12 @@ interface Props {
 }
 
 const Table = ({ names, bookings }: Props) => {
+  const list = trpc.useQuery(["bookings.getAll"]);
   const deleteOneMutation = trpc.useMutation(["bookings.deleteOne"], {
-    onSuccess: () => console.log("Delete successful"),
+    onSuccess: () => {
+      list.refetch();
+      console.log("Delete successful");
+    },
   });
 
   const deleteBooking = useCallback(
@@ -30,6 +34,7 @@ const Table = ({ names, bookings }: Props) => {
 
   const { data: session }: any = useSession();
   const router = useRouter();
+
   return bookings.length === 0 ? (
     <h2 className="text-[#8C948C] text-center py-2 text-lg">
       There is no booking to display

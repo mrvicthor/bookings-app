@@ -49,14 +49,14 @@ const CreateBooking = () => {
   const notify = () => toast("Booking created successfully");
   const { data: session }: any = useSession();
   const router = useRouter();
+  const list = trpc.useQuery(["bookings.getAll"]);
   const { handleSubmit, register } = useForm<FormInput>();
 
   const insertMutation = trpc.useMutation(["bookings.insertOne"], {
     onSuccess: () => {
       notify();
+      list.refetch();
       router.push("/bookings");
-
-      // console.log("Booking Created Successfully...");
     },
   });
 

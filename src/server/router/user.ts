@@ -54,7 +54,11 @@ export const userRouter = createRouter()
   })
   .query("getAllUsers", {
     resolve: async ({ ctx }) => {
-      const res = await ctx.prisma.user.findMany();
+      const res = await ctx.prisma.user.findMany({
+        include: {
+          bookings: true,
+        },
+      });
       return res;
     },
   });

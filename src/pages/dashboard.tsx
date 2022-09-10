@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Booking } from "@/models/booking";
 import { requireAuth } from "@/common/requireAuth";
-import { Button, Table } from "@/components/index";
+import { Button, Table, ProgressCircle, Card } from "@/components/index";
 import { FcSalesPerformance } from "react-icons/fc";
 import { AiOutlineAccountBook } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa";
-import { ProgressCircle } from "@/components/index";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -17,15 +16,21 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const Dashboard = () => {
   const router = useRouter();
   const { data: session }: any = useSession();
-  const { data }: any = trpc.useQuery(["bookings.getAll"]);
+  const id = session?.user.id as string;
+  const list = trpc.useQuery(["bookings.getAll"]);
+  const [userBookings, setUserBookings] = useState<Booking[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
-    if (!data?.length) return;
-    setBookings(() => [...data]);
-    console.log(bookings);
-    console.log(data);
-  }, [session, data]);
+    const getBookings = () => {
+      if (!list.data?.length) return;
+
+      setBookings(() => [...(list.data as any)]);
+      let result = list.data?.filter((b) => b.authorId === id);
+      setUserBookings(() => [...(result as any)]);
+    };
+    getBookings();
+  }, [session, list.data]);
 
   return (
     <section className="py-10">
@@ -53,48 +58,33 @@ const Dashboard = () => {
         </div>
         <article className="mt-4 ">
           <div className=" flex gap-8">
-            <div className="dashboardCard flex justify-center items-center gap-6 border rounded-lg px-4">
-              <div className="flex-[50%] space-y-2">
-                <i className="border cursor-pointer flex justify-center  items-center rounded-full border-[#0404FC] hover:bg-[#0404FC] ease-in duration-300 h-8 w-8">
-                  <FcSalesPerformance />
-                </i>
-                <h4 className="text-lg font-semibold">Total Sales</h4>
-                <p className="text-2xl font-bold">£30,000</p>
-                <h6 className="text-[#8C948C] text-sm">Last 24 Hours</h6>
-              </div>
-              <ProgressCircle value={80} />
-            </div>
-            <div className="dashboardCard flex justify-center items-center gap-6 border rounded-lg  px-4">
-              <div className="space-y-2 flex-[50%]">
-                <i className="border cursor-pointer flex justify-center items-center rounded-full border-[#0404FC] hover:bg-[#0404FC] ease-in duration-300 h-8 w-8">
-                  <AiOutlineAccountBook />
-                </i>
-                <h4 className="text-lg font-semibold">Bookings</h4>
-                <p className="text-2xl font-bold">24</p>
-                <h6 className="text-[#8C948C] text-sm">Last 24 Hours</h6>
-              </div>
-              <ProgressCircle value={65} />
-            </div>
-            <div className="dashboardCard flex justify-center items-center gap-6 border rounded-lg px-4">
-              <div className="space-y-2 flex-[50%]">
-                <i className="border cursor-pointer flex justify-center items-center rounded-full border-[#0404FC] hover:bg-[#0404FC] ease-in duration-300 h-8 w-8">
-                  <FaUsers />
-                </i>
-                <h4 className="text-lg font-semibold">Customers</h4>
-                <p className="text-2xl font-bold">20</p>
-                <h6 className="text-[#8C948C] text-sm">Last 24 Hours</h6>
-              </div>
-              <ProgressCircle value={40} />
-            </div>
+            <Card
+              value={80}
+              icon={<FcSalesPerformance />}
+              header="Total Sales"
+              subheader="£30,000"
+            />
+            <Card
+              value={65}
+              icon={<AiOutlineAccountBook />}
+              header="Bookings"
+              subheader="24"
+            />
+            <Card
+              value={40}
+              icon={<FaUsers />}
+              header="Customers"
+              subheader="20"
+            />
           </div>
 
-          <div className="pb-4 w-full mt-4">
+          <div className="pb-4 w-full mt-6">
             <div className="shadow overflow-hidden rounded border-b border-gray-200">
               {session?.user.role === "ADMIN" ? (
                 <Table
                   names={[
                     "S/N",
-                    "Cashier Name",
+                    "Cashier",
                     "First Name",
                     "Last Name",
                     "Item",
@@ -110,7 +100,7 @@ const Dashboard = () => {
                 <Table
                   names={[
                     "S/N",
-                    "Cashier Name",
+                    "Cashier",
                     "First Name",
                     "Last Name",
                     "Item",
@@ -119,7 +109,7 @@ const Dashboard = () => {
                     "Repair Cost",
                     "",
                   ]}
-                  bookings={bookings}
+                  bookings={userBookings}
                 />
               )}
             </div>

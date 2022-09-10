@@ -7,13 +7,17 @@ import { useCallback, useState } from "react";
 
 const DetailsPage = () => {
   const router = useRouter();
+  const list = trpc.useQuery(["bookings.getAll"]);
   const id = parseInt(useRouter().query.id as string, 10);
   const bookingQuery = trpc.useQuery(["bookings.byId", { id }]);
   console.log(bookingQuery);
   const [completed, setCompleted] = useState<boolean>(false);
 
   const updateOneMutation = trpc.useMutation(["bookings.updateBooking"], {
-    onSuccess: () => console.log("Update successful"),
+    onSuccess: () => {
+      list.refetch();
+      console.log("Update successful");
+    },
   });
 
   const updateOne = useCallback(

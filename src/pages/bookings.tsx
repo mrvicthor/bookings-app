@@ -41,7 +41,7 @@ const Bookings = () => {
               <Table
                 names={[
                   "S/N",
-                  "Cashier Name",
+                  "Cashier",
                   "First Name",
                   "Last Name",
                   "Item",
@@ -57,7 +57,7 @@ const Bookings = () => {
               <Table
                 names={[
                   "S/N",
-                  "Cashier Name",
+                  "Cashier",
                   "First Name",
                   "Last Name",
                   "Item",
