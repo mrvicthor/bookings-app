@@ -15,6 +15,7 @@ export const createBookingSchema = z.object({
   itemModel: z.string(),
   hardwareInstallation: z.number(),
   softwareInstallation: z.number(),
+  serialNumber: z.string(),
   isDone: z.boolean(),
   authorId: z.string(),
 });

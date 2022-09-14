@@ -48,7 +48,7 @@ const Login = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 1 }}
-          className="grid grid-cols-2 gap-4 mx-auto w-[90%] lg:max-w-[1140px] pt-20 lg:px-10"
+          className="grid grid-cols-2 gap-8 mx-auto w-[90%] lg:max-w-[1040px] pt-20 lg:px-8"
         >
           <form
             onSubmit={handleSubmit(onSubmit)}

@@ -15,6 +15,7 @@ export interface Booking {
   itemModel: string;
   hardwareInstallation: number;
   softwareInstallation: number;
+  serialNumber: string;
   isDone: boolean;
 }
 

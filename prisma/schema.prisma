@@ -72,6 +72,7 @@ model Booking{
     itemModel String
     hardwareInstallation Int
     softwareInstallation Int
+    serialNumber String
     isDone Boolean @default(false)
     createdAt DateTime @default(now()) 
     author User @relation(fields: [authorId], references: [id])

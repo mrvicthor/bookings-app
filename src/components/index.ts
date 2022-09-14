@@ -7,6 +7,7 @@ import Banner from "@/components/banner";
 import ProgressCircle from "@/components/progressCircle";
 import Table from "@/components/table";
 import Card from "@/components/card";
+import Search from "@/components/search";
 
 export {
   AlertMessage,
@@ -18,4 +19,5 @@ export {
   ProgressCircle,
   Table,
   Card,
+  Search,
 };

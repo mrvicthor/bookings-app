@@ -30,6 +30,7 @@ export const serverRouter = createRouter()
         item,
         itemModel,
         engineerReport,
+        serialNumber,
         brand,
         authorId,
       } = input;
@@ -48,6 +49,7 @@ export const serverRouter = createRouter()
           item,
           itemModel,
           engineerReport,
+          serialNumber,
           brand,
           author: {
             connect: { id: authorId },
@@ -74,19 +76,6 @@ export const serverRouter = createRouter()
       return booking;
     },
   })
-  // .query("byUser", {
-  //   input: z.object({ email: z.string() }),
-  //   resolve: async ({ input }) => {
-  //     const { email } = input;
-  //     const bookings = await prisma?.bookings.findMany({
-  //       where: {author['email']: email },
-  //       include: {
-  //         author: true,
-  //       },
-  //     });
-  //     return bookings;
-  //   },
-  // })
   .mutation("updateBooking", {
     input: z.object({
       id: z.number(),
@@ -104,6 +93,7 @@ export const serverRouter = createRouter()
       itemModel: z.string(),
       hardwareInstallation: z.number(),
       softwareInstallation: z.number(),
+      serialNumber: z.string(),
       isDone: z.boolean(),
     }),
     resolve: async ({ input, ctx }) => {

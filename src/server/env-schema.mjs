@@ -5,4 +5,6 @@ export const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
   GITHUB_ID: z.string(),
   GITHUB_SECRET: z.string(),
+  POSTCODE_URL: z.string(),
+  POSTCODE_API: z.string(),
 });

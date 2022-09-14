@@ -6,6 +6,8 @@ import { trpc } from "../utils/trpc";
 import { Button } from "@/components/index";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import useAutoComplete from "@/hooks/useAutoComplete";
 
 type FormInput = {
   "First Name": string;
@@ -19,6 +21,7 @@ type FormInput = {
   "Engineer Report": string;
   Product: string;
   "Item Model": string;
+  "Serial Number": string;
   Brand: string;
   "Hardware Install": number;
   "Software Install": number;
@@ -51,6 +54,11 @@ const CreateBooking = () => {
   const router = useRouter();
   const list = trpc.useQuery(["bookings.getAll"]);
   const { handleSubmit, register } = useForm<FormInput>();
+  const [query, setQuery] = useState<string>("");
+  const debounceValue = useAutoComplete(query);
+  console.log(debounceValue);
+
+  const [selected, setSelected] = useState<boolean>(false);
 
   const insertMutation = trpc.useMutation(["bookings.insertOne"], {
     onSuccess: () => {
@@ -76,65 +84,108 @@ const CreateBooking = () => {
       brand: data.Brand,
       hardwareInstallation: Number(data["Hardware Install"]),
       softwareInstallation: Number(data["Software Install"]),
-      isDone: false,
+      serialNumber: data["Serial Number"],
       authorId: session.user.id,
+      isDone: false,
     });
   };
 
+  useEffect(() => {
+    if (!debounceValue) return;
+    const getAddress = async () => {
+      const response = await fetch(
+        `https://ws.postcoder.com/pcw/PCWZ8-ER2SV-9BN5Q-YU2H4/${debounceValue}`
+      );
+      const result = await response.json();
+      console.log(result);
+    };
+    getAddress();
+  }, [debounceValue]);
+
   return (
-    <div className="flex justify-center items-center bg-gradient-to-r from-[#304352] to-[#d7d2cc] py-10 ">
+    <div className="flex flex-col justify-center items-center bg-gradient-to-r from-[#304352] to-[#d7d2cc] py-10 ">
       <ToastContainer />
       <AnimatePresence exitBeforeEnter>
-        <motion.form
+        <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 1 }}
-          className="booking  max-w-4xl min-h-[80vh] px-6 py-4 space-y-3"
+          className="booking  max-w-4xl min-h-[80vh] px-6 py-4 "
         >
-          <h1 className="text-center  text-2xl font-bold">Booking Form</h1>
+          <form className="space-y-3">
+            <h1 className="text-center  text-2xl font-bold">Booking Form</h1>
 
-          <div className="flex gap-8">
-            <InputField label="First Name" register={register} required />
+            <div className="flex gap-8">
+              <InputField label="First Name" register={register} required />
 
-            <InputField label="Last Name" register={register} required />
-            <InputField label="Phone Number" register={register} required />
-          </div>
-          <div className="flex gap-8">
-            <InputField label="Email" register={register} required />
-          </div>
+              <InputField label="Last Name" register={register} required />
+            </div>
+            <div className="flex gap-8">
+              <InputField label="Phone Number" register={register} required />
+              <InputField label="Email" register={register} required />
+              <InputField label="Serial Number" register={register} required />
+            </div>
 
-          <div className="flex gap-8">
-            <InputField label="Street" register={register} required />
-            <InputField label="City" register={register} required />
-            <InputField label="Post Code" register={register} required />
-          </div>
-          <div className="flex gap-8">
-            <InputField label="Fault" register={register} required />
-            <InputField label="Engineer Report" register={register} required />
-            <InputField label="Product" register={register} required />
-            <InputField label="Item Model" register={register} required />
-          </div>
-          <div className="flex gap-8">
-            <InputField label="Brand" register={register} required />
-            <InputField label="Hardware Install" register={register} required />
-            <InputField label="Software Install" register={register} required />
-          </div>
-          <div className="flex gap-8">
-            <Button
-              value="Back"
-              styles="border border-black hover:bg-black hover:text-white w-[50%] ease-in duration-300"
-              handleClick={() => router.push("/dashboard")}
-            />
+            <div className="flex gap-8">
+              <div className="flex flex-col w-[100%]">
+                <label htmlFor="address">Address</label>
+                <input
+                  id="address"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Enter street or post code..."
+                  className="w-[100%] rounded py-2 px-6"
+                />
+              </div>
+              {selected && (
+                <>
+                  <InputField label="Street" register={register} required />
+                  <InputField label="City" register={register} required />
+                  <InputField label="Post Code" register={register} required />
+                </>
+              )}
+            </div>
+            <div className="flex gap-8">
+              <InputField label="Fault" register={register} required />
+              <InputField
+                label="Engineer Report"
+                register={register}
+                required
+              />
+              <InputField label="Product" register={register} required />
+              <InputField label="Item Model" register={register} required />
+            </div>
+            <div className="flex gap-8">
+              <InputField label="Brand" register={register} required />
+              <InputField
+                label="Hardware Install"
+                register={register}
+                required
+              />
+              <InputField
+                label="Software Install"
+                register={register}
+                required
+              />
+            </div>
+
             <button
               type="button"
               onClick={handleSubmit(onSubmit)}
-              className="w-[50%] bg-[#048444] rounded py-2 font-medium text-white cursor-pointer hoverAnimation relative z-[1]"
+              className="w-[100%] bg-[#048444] rounded py-2 font-medium text-white cursor-pointer hoverAnimation relative z-[1]"
             >
               Submit
             </button>
+          </form>
+          <div className="mt-4">
+            <Button
+              value="Back"
+              styles="border border-black hover:bg-black hover:text-white w-[100%] ease-in duration-300 rounded py-2"
+              handleClick={() => router.push("/dashboard")}
+            />
           </div>
-        </motion.form>
+        </motion.div>
       </AnimatePresence>
     </div>
   );
