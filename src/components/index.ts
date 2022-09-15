@@ -8,6 +8,7 @@ import ProgressCircle from "@/components/progressCircle";
 import Table from "@/components/table";
 import Card from "@/components/card";
 import Search from "@/components/search";
+import DropdownList from "@/components/dropdownList";
 
 export {
   AlertMessage,
@@ -20,4 +21,5 @@ export {
   Table,
   Card,
   Search,
+  DropdownList,
 };

@@ -3,11 +3,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
-import { Button } from "@/components/index";
+import { Button, DropdownList } from "@/components/index";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import useAutoComplete from "@/hooks/useAutoComplete";
+import { Address } from "@/models/address";
 
 type FormInput = {
   "First Name": string;
@@ -55,6 +56,11 @@ const CreateBooking = () => {
   const list = trpc.useQuery(["bookings.getAll"]);
   const { handleSubmit, register } = useForm<FormInput>();
   const [query, setQuery] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [postCode, setPostCode] = useState<string>("");
+  const [options, setOptions] = useState<Address[]>([]);
+
   const debounceValue = useAutoComplete(query);
   console.log(debounceValue);
 
@@ -90,14 +96,21 @@ const CreateBooking = () => {
     });
   };
 
+  const handleSelect = () => setSelected(!selected);
+
   useEffect(() => {
     if (!debounceValue) return;
     const getAddress = async () => {
       const response = await fetch(
-        `https://ws.postcoder.com/pcw/PCWZ8-ER2SV-9BN5Q-YU2H4/${debounceValue}`
+        `https://ws.postcoder.com/pcw/PCWZ8-ER2SV-9BN5Q-YU2H4/address/uk/${debounceValue}`
       );
       const result = await response.json();
       console.log(result);
+      setOptions(() => [...result]);
+      const { premise, posttown, postcode, street } = result;
+      setAddress(premise + " , " + street);
+      setCity(posttown);
+      setPostCode(postcode);
     };
     getAddress();
   }, [debounceValue]);
@@ -137,6 +150,9 @@ const CreateBooking = () => {
                   placeholder="Enter street or post code..."
                   className="w-[100%] rounded py-2 px-6"
                 />
+                {!options.length ? null : (
+                  <DropdownList results={options} toggleSelect={handleSelect} />
+                )}
               </div>
               {selected && (
                 <>
