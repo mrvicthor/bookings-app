@@ -1,4 +1,3 @@
-import AlertMessage from "@/components/alertMessage";
 import Layout from "@/components/layout";
 import Navbar from "@/components/navbar";
 import Button from "@/components/button";
@@ -9,9 +8,9 @@ import Table from "@/components/table";
 import Card from "@/components/card";
 import Search from "@/components/search";
 import DropdownList from "@/components/dropdownList";
+import About from "@/components/about";
 
 export {
-  AlertMessage,
   Layout,
   Navbar,
   Button,
@@ -22,4 +21,5 @@ export {
   Card,
   Search,
   DropdownList,
+  About,
 };

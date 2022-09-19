@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { Banner } from "@/components";
+import { Banner, About } from "@/components";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Home: NextPage = () => {
@@ -13,6 +13,7 @@ const Home: NextPage = () => {
           transition={{ duration: 1 }}
         >
           <Banner />
+          <About />
         </motion.div>
       </AnimatePresence>
     </div>
