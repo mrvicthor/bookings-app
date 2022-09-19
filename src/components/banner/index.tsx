@@ -15,7 +15,7 @@ const Banner = () => {
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
-      className=" h-[92vh]"
+      className=" h-[92.2vh]"
     >
       <div className="grid grid-cols-2 justify-between gap-8  py-16 px-4 md:max-w-[1040px] md:mx-auto">
         <div className="space-y-5 py-16 px-4">

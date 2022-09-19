@@ -9,6 +9,7 @@ import Card from "@/components/card";
 import Search from "@/components/search";
 import DropdownList from "@/components/dropdownList";
 import About from "@/components/about";
+import Box from "@/components/box";
 
 export {
   Layout,
@@ -22,4 +23,5 @@ export {
   Search,
   DropdownList,
   About,
+  Box,
 };

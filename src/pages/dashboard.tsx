@@ -8,6 +8,7 @@ import { Button, Table, ProgressCircle, Card } from "@/components/index";
 import { FcSalesPerformance } from "react-icons/fc";
 import { AiOutlineAccountBook } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa";
+import { RiMoneyPoundCircleFill } from "react-icons/ri";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -60,7 +61,7 @@ const Dashboard = () => {
           <div className=" flex gap-8">
             <Card
               value={80}
-              icon={<FcSalesPerformance />}
+              icon={<RiMoneyPoundCircleFill />}
               header="Total Sales"
               subheader="£30,000"
             />
