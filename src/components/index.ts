@@ -10,6 +10,12 @@ import Search from "@/components/search";
 import DropdownList from "@/components/dropdownList";
 import About from "@/components/about";
 import Box from "@/components/box";
+import Modal from "@/components/modal";
+import {
+  SelectField,
+  DefaultInputField,
+  InputField,
+} from "@/components/inputFields";
 
 export {
   Layout,
@@ -22,6 +28,10 @@ export {
   Card,
   Search,
   DropdownList,
+  Modal,
   About,
   Box,
+  InputField,
+  DefaultInputField,
+  SelectField,
 };

@@ -1,14 +1,22 @@
-import { Path, useForm, UseFormRegister, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
-import { Button, DropdownList } from "@/components/index";
+import {
+  Button,
+  DropdownList,
+  Modal,
+  InputField,
+  SelectField,
+  DefaultInputField,
+} from "@/components/index";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useAutoComplete from "@/hooks/useAutoComplete";
 import { Address } from "@/models/address";
+import { FcCheckmark } from "react-icons/fc";
 
 type FormInput = {
   "First Name": string;
@@ -24,73 +32,11 @@ type FormInput = {
   "Item Model": string;
   "Serial Number": string;
   Brand: string;
-  "Hardware Install": number;
-  "Software Install": number;
+  "Hardware Install": string;
+  "Software Install": string;
+  Deposit: number;
+  Cost: number;
   authorId: string;
-};
-
-type InputProps = {
-  label: Path<FormInput>;
-  register: UseFormRegister<FormInput>;
-  required: boolean;
-};
-
-type DefaultProps = {
-  label: Path<FormInput>;
-  register: UseFormRegister<FormInput>;
-  defaultValue: string;
-};
-
-type SelectProps = {
-  label: Path<FormInput>;
-  register: UseFormRegister<FormInput>;
-  required: boolean;
-  lists: string[];
-};
-
-const InputField = ({ label, register, required }: InputProps) => {
-  return (
-    <div className="flex flex-col w-[100%]">
-      <label htmlFor={label}>{label}</label>
-      <input
-        {...register(label, { required })}
-        id={label}
-        placeholder={label}
-        className="w-[100%] rounded py-2 px-6"
-      />
-    </div>
-  );
-};
-
-const DefaultInputField = ({ label, register, defaultValue }: DefaultProps) => {
-  return (
-    <div className="flex flex-col w-[100%]">
-      <label htmlFor={label}>{label}</label>
-      <input
-        {...register(label)}
-        defaultValue={defaultValue}
-        className="w-[100%] rounded py-2 px-6"
-      />
-    </div>
-  );
-};
-
-const SelectField = ({ label, required, register, lists }: SelectProps) => {
-  return (
-    <div className="flex flex-col w-[100%]">
-      <label htmlFor={label}>{label}</label>
-      <select
-        className="w-[100%] rounded py-[11px] px-6 cursor-pointer"
-        {...register(label, { required })}
-      >
-        {lists.map((list, index) => (
-          <option key={index} value={list}>
-            {list}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
 };
 
 const CreateBooking = () => {
@@ -102,6 +48,8 @@ const CreateBooking = () => {
   const [query, setQuery] = useState<string>("");
   const [options, setOptions] = useState<Address[]>([]);
   const [selected, setSelected] = useState<Address>();
+  const [showHardwareModal, setShowHardwareModal] = useState<boolean>(false);
+  const [showSoftwareModal, setShowSoftwareModal] = useState<boolean>(false);
   const debounceValue = useAutoComplete(query);
   console.log(debounceValue);
 
@@ -129,8 +77,10 @@ const CreateBooking = () => {
       item: data.Product,
       itemModel: data["Item Model"],
       brand: data.Brand,
-      hardwareInstallation: Number(data["Hardware Install"]),
-      softwareInstallation: Number(data["Software Install"]),
+      hardwareInstallation: data["Hardware Install"],
+      softwareInstallation: data["Software Install"],
+      deposit: data["Deposit"],
+      cost: data["Cost"],
       serialNumber: data["Serial Number"],
       authorId: session.user.id,
       isDone: false,
@@ -206,7 +156,7 @@ const CreateBooking = () => {
                   />
                 )}
                 {selected && (
-                  <div className="space-y-1 mt-1">
+                  <div className="flex gap-8 mt-1">
                     <DefaultInputField
                       defaultValue={selected.premise + ", " + selected.street}
                       label="Street"
@@ -252,13 +202,13 @@ const CreateBooking = () => {
                   "iPhone",
                   "Android",
                   "Tablet",
+                  "External Hard-Drive",
                 ]}
               />
 
-              {/* <InputField label="Product" register={register} required /> */}
               <InputField label="Item Model" register={register} required />
             </div>
-            <div className="flex gap-8">
+            <div className="flex items-center justify-center gap-8">
               <SelectField
                 label="Brand"
                 register={register}
@@ -277,18 +227,37 @@ const CreateBooking = () => {
                   "Zenbook",
                 ]}
               />
-              <InputField
-                label="Hardware Install"
-                register={register}
-                required
-              />
-              <InputField
-                label="Software Install"
-                register={register}
-                required
-              />
+              <div
+                onClick={() => setShowHardwareModal(!showHardwareModal)}
+                className="h-[100%] mt-5 border border-white w-72 cursor-pointer text-white hover:border-black hover:text-black text-center py-2 rounded"
+              >
+                Hardware Install ? {showHardwareModal && <FcCheckmark />}
+              </div>
+              {showHardwareModal && (
+                <Modal
+                  label="Hardware Install"
+                  register={register}
+                  toggleModal={() => setShowHardwareModal(false)}
+                />
+              )}
+              <div
+                onClick={() => setShowSoftwareModal(!showSoftwareModal)}
+                className="h-[100%] mt-5 py-2 w-72 border border-white cursor-pointer text-white hover:border-black hover:text-black rounded text-center"
+              >
+                Software Install ? {showSoftwareModal && <FcCheckmark />}
+              </div>
+              {showSoftwareModal && (
+                <Modal
+                  label="Software Install"
+                  register={register}
+                  toggleModal={() => setShowSoftwareModal(false)}
+                />
+              )}
             </div>
-
+            <div className="flex gap-8">
+              <InputField label="Deposit" register={register} />
+              <InputField label="Cost" register={register} required />
+            </div>
             <button
               type="button"
               onClick={handleSubmit(onSubmit)}

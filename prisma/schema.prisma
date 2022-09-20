@@ -70,8 +70,10 @@ model Booking{
     item String
     brand String
     itemModel String
-    hardwareInstallation Int
-    softwareInstallation Int
+    hardwareInstallation String?
+    softwareInstallation String?
+    deposit Int?
+    cost Int
     serialNumber String
     isDone Boolean @default(false)
     createdAt DateTime @default(now()) 

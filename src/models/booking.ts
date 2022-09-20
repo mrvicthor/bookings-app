@@ -13,8 +13,10 @@ export interface Booking {
   item: string;
   brand: string;
   itemModel: string;
-  hardwareInstallation: number;
-  softwareInstallation: number;
+  hardwareInstallation: string;
+  softwareInstallation: string;
+  deposit: number;
+  cost: number;
   serialNumber: string;
   isDone: boolean;
 }
