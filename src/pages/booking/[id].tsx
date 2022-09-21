@@ -59,6 +59,8 @@ const DetailsPage = () => {
     hardwareInstallation,
     softwareInstallation,
     authorId,
+    cost,
+    deposit,
   } = data;
 
   console.log(data);
@@ -121,7 +123,7 @@ const DetailsPage = () => {
           <div className="py-2 flex flex-col items-center">
             <h3 className="opacity-70 text-xs">Total Cost</h3>
             <p className="font-semibold text-3xl">
-              £ {hardwareInstallation + softwareInstallation}
+              £ {deposit == null ? 0 : deposit + cost}
             </p>
           </div>
           <div>

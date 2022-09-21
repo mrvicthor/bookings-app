@@ -95,9 +95,11 @@ export const serverRouter = createRouter()
       item: z.string(),
       brand: z.string(),
       itemModel: z.string(),
-      hardwareInstallation: z.number(),
-      softwareInstallation: z.number(),
+      hardwareInstallation: z.string(),
+      softwareInstallation: z.string(),
       serialNumber: z.string(),
+      deposit: z.number(),
+      cost: z.number(),
       isDone: z.boolean(),
     }),
     resolve: async ({ input, ctx }) => {

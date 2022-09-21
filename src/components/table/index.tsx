@@ -68,7 +68,7 @@ const Table = ({ names, bookings }: Props) => {
             <td className="text-left py-3 px-4">{booking.fault}</td>
             <td className="text-left py-3 px-4">{booking.engineerReport}</td>
             <td className="text-left py-3 px-4">
-              £ {booking.hardwareInstallation + booking.softwareInstallation}
+              £ {booking.deposit + booking.cost}
             </td>
             <td className="text-left py-3 px-4">
               <button

@@ -1,8 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/router";
-import { trpc } from "../utils/trpc";
 import {
   Button,
   DropdownList,
@@ -12,11 +10,8 @@ import {
   DefaultInputField,
 } from "@/components/index";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import useAutoComplete from "@/hooks/useAutoComplete";
-import { Address } from "@/models/address";
-import { FcCheckmark } from "react-icons/fc";
+import { useRouter } from "next/router";
+import { trpc } from "../utils/trpc";
 
 type FormInput = {
   "First Name": string;
@@ -39,75 +34,7 @@ type FormInput = {
   authorId: string;
 };
 
-const CreateBooking = () => {
-  const notify = () => toast("Booking created successfully");
-  const { data: session }: any = useSession();
-  const router = useRouter();
-  const list = trpc.useQuery(["bookings.getAll"]);
-  const { handleSubmit, register } = useForm<FormInput>();
-  const [query, setQuery] = useState<string>("");
-  const [options, setOptions] = useState<Address[]>([]);
-  const [selected, setSelected] = useState<Address>();
-  const [showHardwareModal, setShowHardwareModal] = useState<boolean>(false);
-  const [showSoftwareModal, setShowSoftwareModal] = useState<boolean>(false);
-  const debounceValue = useAutoComplete(query);
-  console.log(debounceValue);
-
-  const [isHidden, setIsHidden] = useState<boolean>(false);
-
-  const insertMutation = trpc.useMutation(["bookings.insertOne"], {
-    onSuccess: () => {
-      notify();
-      list.refetch();
-      router.push("/bookings");
-    },
-  });
-
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
-    insertMutation.mutate({
-      firstName: data["First Name"],
-      lastName: data["Last Name"],
-      email: data.Email,
-      phone: data["Phone Number"],
-      street: data.Street,
-      city: data.City,
-      postalCode: data["Post Code"],
-      fault: data.Fault,
-      engineerReport: data["Engineer Report"],
-      item: data.Product,
-      itemModel: data["Item Model"],
-      brand: data.Brand,
-      hardwareInstallation: data["Hardware Install"],
-      softwareInstallation: data["Software Install"],
-      deposit: data["Deposit"] ? data["Deposit"] : 0,
-      cost: Number(data["Cost"]),
-      serialNumber: data["Serial Number"],
-      authorId: session.user.id,
-      isDone: false,
-    });
-  };
-
-  const handleHidden = () => setIsHidden(!isHidden);
-
-  useEffect(() => {
-    if (!debounceValue) return;
-    const getAddress = async () => {
-      const response = await fetch(
-        `https://ws.postcoder.com/pcw/PCWZ8-ER2SV-9BN5Q-YU2H4/address/uk/${debounceValue}`
-      );
-      if (!response.ok) setIsHidden(true);
-      const result = await response.json();
-      console.log(result);
-      setOptions(() => [...result]);
-      if (selected == null) {
-        return;
-      } else {
-        setOptions([]);
-      }
-    };
-    getAddress();
-  }, [debounceValue, selected]);
-
+const EditBooking = () => {
   return (
     <div className="flex flex-col justify-center items-center bg-gradient-to-r from-[#304352] to-[#d7d2cc] py-10 ">
       <ToastContainer />
@@ -283,4 +210,4 @@ const CreateBooking = () => {
   );
 };
 
-export default CreateBooking;
+export default EditBooking;
