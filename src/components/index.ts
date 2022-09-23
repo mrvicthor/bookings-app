@@ -15,6 +15,9 @@ import {
   SelectField,
   DefaultInputField,
   InputField,
+  EditDefaultInputField,
+  EditInputField,
+  EditSelectField,
 } from "@/components/inputFields";
 
 export {
@@ -34,4 +37,7 @@ export {
   InputField,
   DefaultInputField,
   SelectField,
+  EditDefaultInputField,
+  EditInputField,
+  EditSelectField,
 };

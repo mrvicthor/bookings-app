@@ -48,7 +48,8 @@ const Bookings = () => {
                   "Item",
                   "Fault",
                   "Comment",
-                  "Repair Cost",
+                  "Cost",
+                  "",
                   "",
                   "",
                 ]}
@@ -64,7 +65,8 @@ const Bookings = () => {
                   "Item",
                   "Fault",
                   "Comment",
-                  "Repair Cost",
+                  "Cost",
+                  "",
                   "",
                 ]}
                 bookings={bookings}

@@ -58,7 +58,7 @@ const Dashboard = () => {
           </div>
         </div>
         <article className="mt-4 ">
-          <div className=" flex gap-8">
+          <div className=" flex gap-8 overflow-hidden">
             <Card
               value={80}
               icon={<RiMoneyPoundCircleFill />}
@@ -91,7 +91,8 @@ const Dashboard = () => {
                     "Item",
                     "Fault",
                     "Comment",
-                    "Repair Cost",
+                    "Cost",
+                    "",
                     "",
                     "",
                   ]}
@@ -107,7 +108,8 @@ const Dashboard = () => {
                     "Item",
                     "Fault",
                     "Comment",
-                    "Repair Cost",
+                    "Cost",
+                    "",
                     "",
                   ]}
                   bookings={userBookings}

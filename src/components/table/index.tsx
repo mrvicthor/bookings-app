@@ -6,13 +6,16 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { trpc } from "@/utils/trpc";
 import { useCallback } from "react";
-
+import { FaEdit } from "react-icons/fa";
 interface Props {
   names: string[];
   bookings: Booking[];
 }
 
 const Table = ({ names, bookings }: Props) => {
+  const trimString = (text: string) => {
+    return text?.length > 8 ? text.substr(0, 8 - 1) + "..." : text;
+  };
   const list = trpc.useQuery(["bookings.getAll"]);
   const deleteOneMutation = trpc.useMutation(["bookings.deleteOne"], {
     onSuccess: () => {
@@ -65,9 +68,11 @@ const Table = ({ names, bookings }: Props) => {
               {capitalizeFirstLetter(booking.lastName)}
             </td>
             <td className="text-left py-3 px-4">{booking.item}</td>
-            <td className="text-left py-3 px-4">{booking.fault}</td>
-            <td className="text-left py-3 px-4">{booking.engineerReport}</td>
+            <td className="text-left py-3 px-4">{trimString(booking.fault)}</td>
             <td className="text-left py-3 px-4">
+              {trimString(booking.engineerReport)}
+            </td>
+            <td className="text-left py-3 px-2">
               £ {booking.deposit + booking.cost}
             </td>
             <td className="text-left py-3 px-4">
@@ -78,17 +83,31 @@ const Table = ({ names, bookings }: Props) => {
                     query: { id: booking.id },
                   });
                 }}
-                className="flex items-center gap-2 bg-[#2304FB] px-4 py-1 rounded text-white hover:scale-110 hover:bg-[#042444] transition duration-300 ease-out hover:ease-in"
+                className="flex items-center gap-2 bg-[#2304FB] px-2 py-1 rounded text-white hover:scale-110 hover:bg-[#042444] transition duration-300 ease-out hover:ease-in"
               >
                 {" "}
                 <BiDetail /> Details
+              </button>
+            </td>
+            <td className="text-left py-3 px-4">
+              <button
+                onClick={() => {
+                  router.push({
+                    pathname: `/booking/edit/[id]`,
+                    query: { id: booking.id },
+                  });
+                }}
+                className="flex items-center text-sm gap-2 bg-[#8C948C] px-2 py-1 rounded text-white hover:scale-110 hover:bg-black transition duration-300 ease-out hover:ease-in"
+              >
+                {" "}
+                <FaEdit /> Edit
               </button>
             </td>
             {session?.user.role === "ADMIN" && (
               <td className="text-left py-3 px-4">
                 <button
                   onClick={() => deleteBooking(booking)}
-                  className="flex items-center gap-2 bg-[#EB1018] px-4 py-1 rounded text-white hover:scale-110 hover:bg-[#8C0C0C] transition duration-300 ease-out hover:ease-in"
+                  className="flex items-center gap-2 bg-[#EB1018] px-2 py-1 rounded text-white hover:scale-110 hover:bg-[#8C0C0C] transition duration-300 ease-out hover:ease-in"
                 >
                   <MdDelete /> Delete
                 </button>
