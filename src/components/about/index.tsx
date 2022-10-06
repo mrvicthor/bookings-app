@@ -2,7 +2,8 @@ import { Box } from "@/components/index";
 import { FaMoneyCheck } from "react-icons/fa";
 import { MdOutlineSettingsSuggest } from "react-icons/md";
 import { BsCardList } from "react-icons/bs";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 const container = {
   hidden: { opacity: 1, scale: 0 },
@@ -17,17 +18,21 @@ const container = {
 };
 
 const About = () => {
+  const ref = useRef<HTMLElement>(null);
+  const inIview = useInView(ref, { once: true });
   return (
     <motion.section
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      className="h-500px mt-12 pb-12 md:max-w-[1040px] md:mx-auto px-4"
+      ref={ref}
+      id="about"
+      // initial={{ opacity: 0 }}
+      // whileInView={{ opacity: 1 }}
+      className="h-screen py-16 pb-12 md:max-w-[1040px] md:mx-auto px-4"
     >
       <motion.div
         variants={container}
         initial="hidden"
         animate="visible"
-        className="flex justify-between gap-6 h-[100%] py-4"
+        className="flex justify-between gap-6 h-[100%]  items-center"
       >
         <Box
           icon={<FaMoneyCheck />}
@@ -36,7 +41,7 @@ const About = () => {
         />
         <Box
           icon={<MdOutlineSettingsSuggest />}
-          title="Assign Roles & Aunthenticate users"
+          title="Assign Roles"
           description="With our platform Easily assign roles & Aunthenticate users."
         />
         <Box

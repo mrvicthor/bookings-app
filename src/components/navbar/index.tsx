@@ -3,7 +3,8 @@ import { Button } from "@/components/index";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link as RLink } from "react-scroll";
 
 const Navbar = () => {
   const router = useRouter();
@@ -15,43 +16,53 @@ const Navbar = () => {
   return (
     <nav className="bg-[#04040A] w-full overflow-hidden">
       <div className="flex gap-8 justify-between items-center px-4 py-2 md:max-w-[1040px] md:mx-auto">
-        <Link href="/">
-          <a className="font-bold text-[#0404FC] hover:text-white">JMTRAX</a>
-        </Link>
+        <RLink
+          to="/"
+          spy={true}
+          smooth={true}
+          className="font-bold text-[#0404FC] hover:text-white cursor-pointer"
+        >
+          JMTRAX
+        </RLink>
 
         <ul className="flex gap-4 space-x-8">
           <li onClick={() => toggleNav("Home")}>
-            <Link href="/">
-              <a
-                className={`${
-                  selectedNav === "Home" ? "text-white" : "text-[#8C948C]"
-                } hover:text-white`}
-              >
-                Home
-              </a>
-            </Link>
+            <RLink
+              to="/"
+              spy={true}
+              smooth={true}
+              className={`${
+                selectedNav === "Home" ? "text-white" : "text-[#8C948C]"
+              } hover:text-white cursor-pointer`}
+            >
+              Home
+            </RLink>
           </li>
           <li onClick={() => toggleNav("About")}>
-            <Link href="/about">
-              <a
-                className={`${
-                  selectedNav === "About" ? "text-white" : "text-[#8C948C]"
-                } hover:text-white`}
-              >
-                About Us
-              </a>
-            </Link>
+            <RLink
+              to="about"
+              offset={-68}
+              smooth={true}
+              spy={true}
+              className={`${
+                selectedNav === "About" ? "text-white" : "text-[#8C948C]"
+              } hover:text-white cursor-pointer`}
+            >
+              About Us
+            </RLink>
           </li>
           <li onClick={() => toggleNav("Contact")}>
-            <Link href="/contact">
-              <a
-                className={`${
-                  selectedNav === "Contact" ? "text-white" : "text-[#8C948C]"
-                } hover:text-white`}
-              >
-                Contact Us
-              </a>
-            </Link>
+            <RLink
+              to="contact"
+              offset={-68}
+              smooth={true}
+              spy={true}
+              className={`${
+                selectedNav === "Contact" ? "text-white" : "text-[#8C948C]"
+              } hover:text-white cursor-pointer`}
+            >
+              Contact Us
+            </RLink>
           </li>
         </ul>
         <div className="flex gap-4 justify-between">

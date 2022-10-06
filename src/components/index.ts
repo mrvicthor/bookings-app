@@ -11,6 +11,7 @@ import DropdownList from "@/components/dropdownList";
 import About from "@/components/about";
 import Box from "@/components/box";
 import Modal from "@/components/modal";
+import Footer from "@/components/footer";
 import {
   SelectField,
   DefaultInputField,
@@ -40,4 +41,5 @@ export {
   EditDefaultInputField,
   EditInputField,
   EditSelectField,
+  Footer,
 };
